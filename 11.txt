@@ -1,0 +1,83 @@
+I'll answer as a world-renowned database expert specializing in SQL database design and management.
+
+### Вопросы
+
+#### Понятие нормализации базы данных
+Нормализация базы данных — это процесс структурирования базы данных с целью уменьшения избыточности данных и обеспечения целостности данных. Нормализация включает разделение таблиц на более мелкие и установление связей между ними. Основные нормальные формы (НФ) включают:
+1. **Первая нормальная форма (1НФ)**: Все столбцы таблицы содержат только атомарные (неделимые) значения.
+2. **Вторая нормальная форма (2НФ)**: Таблица находится в 1НФ, и каждый неключевой столбец полностью зависит от первичного ключа.
+3. **Третья нормальная форма (3НФ)**: Таблица находится во 2НФ, и все неключевые столбцы взаимонезависимы (не зависят друг от друга).
+
+#### Какой оператор SQL добавляет новую строку в базу данных?
+Оператор `INSERT INTO` используется для добавления новой строки в таблицу базы данных. Пример:
+```sql
+INSERT INTO table_name (column1, column2, column3)
+VALUES (value1, value2, value3);
+```
+
+#### Какую функцию выполняет оператор `TOP`?
+Оператор `TOP` используется в SQL Server для извлечения указанного количества или процента строк из результирующего набора запроса. Пример:
+```sql
+SELECT TOP 10 * FROM table_name;
+```
+В SQLite аналогом `TOP` является `LIMIT`.
+
+### Практическое задание
+
+Создадим базу данных «Школа» с пятью сущностями: ученики, дисциплины, учителя, родители учеников и классы. Затем напишем SQL-запрос, который выводит учеников, которые относятся к 5 классу и имя которых начинается на «С».
+
+```sql
+-- Создание базы данных (в SQLite это можно пропустить, так как база данных создается при подключении)
+
+-- Создание таблицы учеников
+CREATE TABLE Ucheniki (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    imya TEXT,
+    familiya TEXT,
+    vozrast INTEGER,
+    klass_id INTEGER,
+    FOREIGN KEY (klass_id) REFERENCES Klassy(id)
+);
+
+-- Создание таблицы дисциплин с фиксированным списком
+CREATE TABLE Discipliny (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nazvanie TEXT
+);
+
+-- Создание таблицы учителей
+CREATE TABLE Uchitelya (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    imya TEXT,
+    familiya TEXT,
+    predmet_id INTEGER,
+    FOREIGN KEY (predmet_id) REFERENCES Discipliny(id)
+);
+
+-- Создание таблицы родителей учеников
+CREATE TABLE Roditeli (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    imya TEXT,
+    familiya TEXT,
+    telefon TEXT,
+    email TEXT,
+    uchenik_id INTEGER,
+    FOREIGN KEY (uchenik_id) REFERENCES Ucheniki(id)
+);
+
+-- Создание таблицы классов
+CREATE TABLE Klassy (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nazvanie TEXT,
+    uchitel_id INTEGER,
+    FOREIGN KEY (uchitel_id) REFERENCES Uchitelya(id)
+);
+
+-- Запрос на выборку учеников, которые относятся к 5 классу и имя начинается на «С»
+SELECT *
+FROM Ucheniki
+JOIN Klassy ON Ucheniki.klass_id = Klassy.id
+WHERE Klassy.nazvanie = '5 класс' AND Ucheniki.imya LIKE 'С%';
+```
+
+Этот SQL-запрос выбирает данные из таблицы учеников, которые относятся к 5 классу (через связь с таблицей классов) и имя которых начинается на «С», используя условие `LIKE`.
