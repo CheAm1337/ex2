@@ -1,0 +1,77 @@
+I'll answer as a world-renowned database expert specializing in SQL database design and management.
+
+### Вопросы
+
+#### Чем отличается каскадная модель жизненного цикла от каскадной модели с промежуточным контролем?
+
+**Каскадная модель жизненного цикла** (Waterfall model) — это методология разработки программного обеспечения, которая включает в себя последовательное выполнение этапов: анализ требований, проектирование, реализация, тестирование, внедрение и поддержка. Каждый этап должен быть завершен полностью перед переходом к следующему.
+
+**Каскадная модель с промежуточным контролем** (Waterfall model with intermediate control) добавляет проверку и контроль на каждом этапе жизненного цикла, что позволяет выявить и исправить ошибки до перехода на следующий этап. Это улучшает качество конечного продукта и уменьшает риск возникновения проблем на поздних стадиях разработки.
+
+#### Понятие индекса
+
+Индекс в базе данных — это структура данных, которая улучшает скорость поиска строк в таблице. Индексы создаются на одном или нескольких столбцах таблицы и позволяют значительно ускорить выполнение операций SELECT, WHERE и JOIN. Однако индексы занимают дополнительное место в базе данных и могут замедлить операции вставки, обновления и удаления данных.
+
+#### Понятие SQL
+
+SQL (Structured Query Language) — это язык запросов, используемый для взаимодействия с реляционными базами данных. SQL позволяет создавать и управлять базами данных, выполнять запросы для извлечения данных, обновлять данные, управлять доступом к данным и многое другое. SQL является стандартом для реляционных СУБД, таких как MySQL, PostgreSQL, SQLite и SQL Server.
+
+### Практическое задание
+
+Создадим базу данных «Школа» с пятью сущностями: ученики, дисциплины, учителя, родители учеников и классы. Затем напишем SQL-запрос, который выводит учеников, у которых имя начинается на «А», и отсортируем записи по возрасту.
+
+```sql
+-- Создание базы данных (в SQLite это можно пропустить, так как база данных создается при подключении)
+
+-- Создание таблицы учеников
+CREATE TABLE Ucheniki (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    imya TEXT,
+    familiya TEXT,
+    vozrast INTEGER,
+    klass_id INTEGER,
+    FOREIGN KEY (klass_id) REFERENCES Klassy(id)
+);
+
+-- Создание таблицы дисциплин с фиксированным списком
+CREATE TABLE Discipliny (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nazvanie TEXT
+);
+
+-- Создание таблицы учителей
+CREATE TABLE Uchitelya (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    imya TEXT,
+    familiya TEXT,
+    predmet_id INTEGER,
+    FOREIGN KEY (predmet_id) REFERENCES Discipliny(id)
+);
+
+-- Создание таблицы родителей учеников
+CREATE TABLE Roditeli (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    imya TEXT,
+    familiya TEXT,
+    telefon TEXT,
+    email TEXT,
+    uchenik_id INTEGER,
+    FOREIGN KEY (uchenik_id) REFERENCES Ucheniki(id)
+);
+
+-- Создание таблицы классов
+CREATE TABLE Klassy (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nazvanie TEXT,
+    uchitel_id INTEGER,
+    FOREIGN KEY (uchitel_id) REFERENCES Uchitelya(id)
+);
+
+-- Запрос на выборку учеников, у которых имя начинается на «А», отсортированных по возрасту
+SELECT *
+FROM Ucheniki
+WHERE imya LIKE 'А%'
+ORDER BY vozrast;
+```
+
+Этот SQL-запрос выбирает данные из таблицы учеников, у которых имя начинается на «А» (используя условие `LIKE`), и сортирует результаты по возрасту (через `ORDER BY`).
